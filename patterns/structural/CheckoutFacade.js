@@ -17,6 +17,26 @@ class CheckoutFacade {
         // 2. If they are, process the payment using `paymentService.processPayment()`.
         // 3. If payment is successful, arrange shipping using `shippingService.arrangeShipping()`.
         // 4. Log the result of each step. If a step fails, log it and stop.
+
+        console.log("Processing order...");
+
+        if (!this.inventoryService.checkStock(orderDetails.productIds)) {
+            console.log("Order Failed: Items are out of stock.");
+            return; 
+        }
+        console.log("Inventory check passed.");
+
+        if (!this.paymentService.processPayment(orderDetails)) {
+            console.log("Order Failed: Payment was declined.");
+            return; 
+        }
+        console.log("Payment successful.");
+
+        
+        this.shippingService.arrangeShipping(orderDetails);
+        console.log("Shipping arranged.");
+
+        console.log("Order placed successfully!");
     }
 }
 
